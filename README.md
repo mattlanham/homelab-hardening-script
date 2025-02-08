@@ -24,7 +24,7 @@ Contributions and suggestions for additional security measures are welcome!
 
 Download and run the script using these commands:
 ```bash
-wget https://raw.githubusercontent.com/mattlanham/homelab-hardening-script/refs/heads/main/kubernetes/ubuntu.sh
+wget https://raw.githubusercontent.com/mattlanham/homelab-hardening-script/refs/heads/main/ubuntu.sh
 chmod +x ubuntu.sh
 sudo ./ubuntu.sh
 ```
