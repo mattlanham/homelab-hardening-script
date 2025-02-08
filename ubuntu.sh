@@ -34,7 +34,7 @@ echo "-------------------------------------------------"
 # 2️⃣ Update & Upgrade the System
 echo "🔄 Updating and Upgrading System Packages..."
 apt update && apt upgrade -y
-apt install -y ufw fail2ban unattended-upgrades
+apt install -y fail2ban unattended-upgrades
 echo "✅ System updated successfully!" | tee -a $LOG_FILE
 
 # 3️⃣ Create a new sudo user
@@ -62,13 +62,17 @@ systemctl restart ssh
 
 echo "✅ SSH secured! Root login disabled, port changed to $SSH_PORT, and access limited to $NEW_USER" | tee -a $LOG_FILE
 
-# 5️⃣ Enable UFW Firewall
-echo "🛡️ Configuring UFW Firewall..."
-ufw default deny incoming
-ufw default allow outgoing
-ufw allow $SSH_PORT/tcp
-ufw enable
-echo "✅ UFW Firewall configured and enabled!" | tee -a $LOG_FILE
+# 5️⃣ Disable UFW (for Kubernetes compatibility)
+echo "🛡️ Checking and disabling UFW for Kubernetes compatibility..."
+if dpkg -l | grep -q "ufw"; then
+    echo "UFW found, disabling it..."
+    systemctl stop ufw
+    systemctl disable ufw
+    ufw disable
+    echo "✅ UFW disabled for Kubernetes compatibility!" | tee -a $LOG_FILE
+else
+    echo "✅ UFW is not installed - good for Kubernetes compatibility!" | tee -a $LOG_FILE
+fi
 
 # 6️⃣ Configure Fail2Ban
 echo "🚔 Setting up Fail2Ban..."
